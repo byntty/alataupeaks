@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import { ConvexAuthProvider } from './lib/convex-auth'
 import { LanguageProvider } from './lib/language'
 import { RootErrorBoundary } from './components/RootErrorBoundary'
@@ -19,10 +19,10 @@ const NotFound = lazy(() => import('./pages/NotFound'))
 
 function LoadingFallback() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#f5f0eb]">
-      <div className="clay-card p-8 text-center">
-        <div className="text-4xl mb-4 clay-float">⛰️</div>
-        <p className="text-[#999] text-sm">AlatauPeaks</p>
+    <div className="flex items-center justify-center min-h-screen" style={{ background: '#fdf6e3' }}>
+      <div className="retro-card p-8 text-center">
+        <div className="text-4xl mb-4 retro-float">⛰️</div>
+        <p style={{ color: '#8b7355', fontFamily: "'Special Elite', Georgia, serif", fontSize: '0.9rem' }}>AlatauPeaks</p>
       </div>
     </div>
   )
@@ -35,7 +35,7 @@ createRoot(document.getElementById('root')!).render(
         <VlyToolbar />
         <ConvexAuthProvider>
           <LanguageProvider>
-            <BrowserRouter>
+            <HashRouter>
               <RouteSyncer />
               <Suspense fallback={<LoadingFallback />}>
                 <Routes>
@@ -46,7 +46,7 @@ createRoot(document.getElementById('root')!).render(
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
-            </BrowserRouter>
+            </HashRouter>
           </LanguageProvider>
         </ConvexAuthProvider>
       </ToolbarErrorBoundary>
