@@ -6,17 +6,20 @@ export default function NotFound() {
   const { t } = useLanguage()
 
   return (
-    <div className="min-h-screen bg-[#f5f0eb] flex items-center justify-center">
-      <div className="clay-card p-8 max-w-md text-center">
-        <div className="text-6xl mb-4 clay-float">🏔️</div>
-        <h1 className="text-2xl font-bold text-[#1a1a1a] mb-2">
+    <div style={{ minHeight: '100vh', background: '#fdf6e3' }} className="flex items-center justify-center">
+      <div className="retro-card p-8 max-w-md text-center">
+        <div className="text-6xl mb-4 retro-float">🏔️</div>
+        <h1
+          className="text-2xl font-bold mb-2"
+          style={{ color: '#3d2b1f', fontFamily: "'Playfair Display', Georgia, serif" }}
+        >
           {t.notFoundTitle}
         </h1>
-        <p className="text-[#999] mb-6">
+        <p className="mb-6" style={{ color: '#8b7355', fontFamily: "'Special Elite', Georgia, serif" }}>
           Эта страница не найдена. Возможно, путь неверный.
         </p>
         <button
-          className="clay-button"
+          className="retro-button"
           onClick={() => navigate('/')}
         >
           {t.notFoundBack}

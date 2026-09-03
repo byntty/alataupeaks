@@ -21,6 +21,9 @@ import {
   MapPin,
   Loader2,
   AlertCircle,
+  Camera,
+  Sun,
+  TrendingUp,
 } from 'lucide-react'
 import { Navbar } from '../components/Navbar'
 import { useLanguage } from '../lib/language'
@@ -83,6 +86,7 @@ export default function PeakDetail() {
   const [liveForecast, setLiveForecast] = useState<any>(null)
   const [weatherLoading, setWeatherLoading] = useState(false)
   const [weatherError, setWeatherError] = useState<string | null>(null)
+  const [selectedRoute, setSelectedRoute] = useState(0)
 
   useEffect(() => {
     if (!peak) return
@@ -129,15 +133,18 @@ export default function PeakDetail() {
 
   if (!peak) {
     return (
-      <div className="min-h-screen bg-[#f5f0eb]">
+      <div style={{ minHeight: '100vh', background: '#fdf6e3' }}>
         <Navbar />
         <main className="pt-24 px-4 flex items-center justify-center">
-          <div className="clay-card p-8 max-w-md text-center">
-            <div className="text-4xl mb-4">🏔️</div>
-            <h1 className="text-xl font-bold text-[#1a1a1a] mb-4">
+          <div className="retro-card p-8 max-w-md text-center">
+            <div className="text-5xl mb-4 retro-float">🏔️</div>
+            <h1
+              className="text-xl font-bold mb-4"
+              style={{ color: '#3d2b1f', fontFamily: "'Playfair Display', Georgia, serif" }}
+            >
               {t.notFoundTitle}
             </h1>
-            <button className="clay-button" onClick={() => navigate('/')}>
+            <button className="retro-button" onClick={() => navigate('/')}>
               {t.backToCatalog}
             </button>
           </div>
@@ -147,21 +154,24 @@ export default function PeakDetail() {
   }
 
   const difficultyColors: Record<number, string> = {
-    1: '#4ade80',
-    2: '#fb923c',
-    3: '#ef4444',
-    4: '#a855f7',
+    1: '#5a6e3c',
+    2: '#d4a520',
+    3: '#c44d2c',
+    4: '#7b2d8e',
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f0eb]">
+    <div style={{ minHeight: '100vh', background: '#fdf6e3' }}>
       <Navbar />
 
       <main className="pt-24 pb-12 px-4 max-w-7xl mx-auto">
         {/* Back link */}
         <Link
           to="/"
-          className="inline-flex items-center gap-1 text-sm text-[#999] hover:text-[#e07030] transition-colors mb-6 no-underline"
+          className="inline-flex items-center gap-1 text-sm no-underline mb-6 transition-colors"
+          style={{ color: '#8b7355' }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = '#c44d2c')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = '#8b7355')}
         >
           <ChevronLeft className="w-4 h-4" />
           {t.backToCatalog}
@@ -171,22 +181,29 @@ export default function PeakDetail() {
         <div className="flex flex-col lg:flex-row gap-6 mb-6">
           {/* Route Block — 65% */}
           <div className="lg:w-[65%]">
-            <div className="clay-card-orange p-6 h-full">
+            <div className="retro-card-accent p-6 h-full">
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h1 className="text-2xl font-bold text-white mb-1">
+                  <h1
+                    className="text-2xl font-bold mb-1"
+                    style={{ color: '#fdf6e3', fontFamily: "'Playfair Display', Georgia, serif" }}
+                  >
                     {displayName(peak)}
                   </h1>
                   <div className="flex items-center gap-2">
-                    <span className="clay-badge text-xs text-white/80">
+                    <span
+                      className="retro-badge text-xs"
+                      style={{ color: '#fdf6e3', borderColor: '#fdf6e3' }}
+                    >
                       {peak.elevation} м
                     </span>
                     <span
-                      className="clay-badge text-xs"
+                      className="retro-badge text-xs"
                       style={{
+                        color: '#fdf6e3',
+                        borderColor: difficultyColors[peak.difficultyLevel],
                         background: difficultyColors[peak.difficultyLevel],
-                        color: '#fff',
                       }}
                     >
                       {peak.difficulty}
@@ -195,76 +212,129 @@ export default function PeakDetail() {
                 </div>
               </div>
 
+              {/* Route selector buttons */}
+              {peak.routes.length > 1 && (
+                <div className="flex gap-2 mb-4 flex-wrap">
+                  {peak.routes.map((route, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setSelectedRoute(idx)}
+                      className="px-4 py-2 text-xs font-bold uppercase transition-all"
+                      style={{
+                        fontFamily: "'Special Elite', Georgia, serif",
+                        letterSpacing: '0.08em',
+                        border: selectedRoute === idx ? '2px solid #fdf6e3' : '2px solid rgba(253,246,227,0.3)',
+                        borderRadius: '4px',
+                        background: selectedRoute === idx ? 'rgba(253,246,227,0.2)' : 'transparent',
+                        color: '#fdf6e3',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {route.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {/* Route content */}
-              <div className="clay-inset p-5 rounded-2xl bg-white/20">
+              <div className="retro-inset p-5" style={{ background: 'rgba(61,43,31,0.25)', borderColor: 'rgba(253,246,227,0.2)' }}>
                 <div className="flex flex-col sm:flex-row gap-6">
                   {/* Route schematic SVG */}
                   <div className="sm:w-1/3 flex items-center justify-center">
                     <svg viewBox="0 0 120 200" width={120} height={200}>
                       <defs>
                         <linearGradient id="routeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="#fff" stopOpacity={0.9} />
-                          <stop offset="100%" stopColor="#fff" stopOpacity={0.5} />
+                          <stop offset="0%" stopColor="#fdf6e3" stopOpacity={0.9} />
+                          <stop offset="100%" stopColor="#fdf6e3" stopOpacity={0.5} />
                         </linearGradient>
                       </defs>
+                      {/* Dashed path */}
                       <path
                         d="M60,20 C30,50 90,80 50,110 C20,130 80,160 60,185"
                         fill="none"
                         stroke="url(#routeGrad)"
-                        strokeWidth={3}
+                        strokeWidth={2.5}
                         strokeLinecap="round"
-                        strokeDasharray="6 4"
+                        strokeDasharray="8 4"
                       />
-                      <circle cx={60} cy={20} r={5} fill="#fff" />
-                      <circle cx={60} cy={185} r={5} fill="#fff" />
-                      <text x={75} y={25} fill="#fff" fontSize={9} opacity={0.8}>
+                      {/* Start marker */}
+                      <circle cx={60} cy={20} r={5} fill="#fdf6e3" stroke="#fdf6e3" strokeWidth={1} />
+                      <circle cx={60} cy={20} r={2} fill="#c44d2c" />
+                      {/* End marker */}
+                      <circle cx={60} cy={185} r={5} fill="#fdf6e3" stroke="#fdf6e3" strokeWidth={1} />
+                      <circle cx={60} cy={185} r={2} fill="#c44d2c" />
+                      {/* Labels */}
+                      <text x={78} y={24} fill="#fdf6e3" fontSize={8} fontFamily="'Special Elite', serif" opacity={0.9}>
                         Старт
                       </text>
-                      <text x={75} y={190} fill="#fff" fontSize={9} opacity={0.8}>
+                      <text x={78} y={190} fill="#fdf6e3" fontSize={8} fontFamily="'Special Elite', serif" opacity={0.9}>
                         Вершина
                       </text>
+                      {/* Decorative dots along path */}
+                      <circle cx={45} cy={75} r={1.5} fill="#fdf6e3" opacity={0.4} />
+                      <circle cx={55} cy={130} r={1.5} fill="#fdf6e3" opacity={0.4} />
+                      <circle cx={65} cy={160} r={1.5} fill="#fdf6e3" opacity={0.4} />
                     </svg>
                   </div>
 
-                  {/* Stats */}
+                  {/* Stats — from selected route */}
                   <div className="sm:w-2/3 space-y-3">
                     <RouteStatRow
                       icon={<Compass className="w-4 h-4" />}
                       label={t.distance}
-                      value={peak.routeStats.distance}
+                      value={peak.routes[selectedRoute]?.distance || peak.routeStats.distance}
                     />
                     <RouteStatRow
                       icon={<Route className="w-4 h-4" />}
                       label={t.difficulty}
-                      value={peak.difficulty}
+                      value={peak.routes[selectedRoute]?.difficulty || peak.difficulty}
                     />
                     <RouteStatRow
                       icon={<ArrowUpRight className="w-4 h-4" />}
                       label={t.elevationGain}
-                      value={peak.routeStats.elevationGain}
+                      value={peak.routes[selectedRoute]?.elevationGain || peak.routeStats.elevationGain}
                     />
                     <RouteStatRow
                       icon={<Clock className="w-4 h-4" />}
                       label={t.duration}
-                      value={peak.routeStats.duration}
+                      value={peak.routes[selectedRoute]?.duration || peak.routeStats.duration}
                     />
+                    {peak.routes[selectedRoute]?.terrain && (
+                      <RouteStatRow
+                        icon={<TrendingUp className="w-4 h-4" />}
+                        label={t.terrain}
+                        value={peak.routes[selectedRoute].terrain}
+                      />
+                    )}
                   </div>
                 </div>
               </div>
 
               {/* Guru Maps link */}
-              {peak.routes[0] && (
+              {peak.routes[selectedRoute] && (
                 <button
                   onClick={() => {
-                    const route = peak.routes[0]
+                    const route = peak.routes[selectedRoute]
                     if (route.guruMapsFile) {
-                      // Try to open .guru file via custom URL scheme
                       window.location.href = `gurumaps://open?url=${encodeURIComponent(window.location.origin + route.guruMapsFile)}`
                     } else if (route.guruMapsUrl) {
                       window.open(route.guruMapsUrl, '_blank')
                     }
                   }}
-                  className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-xl bg-white/20 text-white text-sm font-medium hover:bg-white/30 transition-colors"
+                  className="inline-flex items-center gap-2 mt-4 px-4 py-2 text-sm font-bold"
+                  style={{
+                    background: 'rgba(253,246,227,0.15)',
+                    border: '2px solid rgba(253,246,227,0.4)',
+                    borderRadius: '4px',
+                    color: '#fdf6e3',
+                    fontFamily: "'Special Elite', Georgia, serif",
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(253,246,227,0.25)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(253,246,227,0.15)')}
                 >
                   <MapPin className="w-4 h-4" />
                   {t.guruMaps}
@@ -300,6 +370,9 @@ export default function PeakDetail() {
           toggleItem={toggleItem}
         />
 
+        {/* Photo Gallery */}
+        <PhotoGalleryBlock peak={peak} t={t} />
+
         {/* Safety Block */}
         <SafetyBlock peak={peak} t={t} />
       </main>
@@ -307,16 +380,45 @@ export default function PeakDetail() {
   )
 }
 
+/* ─── Best Hiking Day ─── */
+function getBestHikingDay(): { day: string; icon: string; reason: string } {
+  const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+  const icons = ['☀️', '⛅', '🌤️']
+  const reasons = [
+    'Минимум осадков, слабый ветер',
+    'Ясная погода, комфортная температура',
+    'Лучшие условия для восхождения',
+  ]
+  const bestIdx = new Date().getDay()
+  return {
+    day: days[bestIdx],
+    icon: icons[bestIdx % 3],
+    reason: reasons[bestIdx % 3],
+  }
+}
+
 /* ─── RouteStatRow ─── */
 function RouteStatRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/10 text-white/70">
+      <div
+        className="w-8 h-8 flex items-center justify-center"
+        style={{
+          background: 'rgba(253,246,227,0.12)',
+          border: '1px solid rgba(253,246,227,0.2)',
+          borderRadius: '3px',
+          color: 'rgba(253,246,227,0.7)',
+        }}
+      >
         {icon}
       </div>
       <div>
-        <div className="text-white/60 text-xs">{label}</div>
-        <div className="text-white font-semibold text-sm">{value}</div>
+        <div className="text-xs" style={{ color: 'rgba(253,246,227,0.55)', fontFamily: "'Special Elite', serif", textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          {label}
+        </div>
+        <div className="font-bold text-sm" style={{ color: '#fdf6e3' }}>
+          {value}
+        </div>
       </div>
     </div>
   )
@@ -350,7 +452,6 @@ function WeatherBlock({
   loading: boolean
   error: string | null
 }) {
-  // Use live API data if available, otherwise fall back to mock
   const w = liveWeather
     ? {
         icon: weatherIconFromCode(liveWeather.weather?.[0]?.icon || '01d'),
@@ -365,10 +466,12 @@ function WeatherBlock({
       }
     : peak.weather
 
-  // Build hourly data from live forecast or mock
   const hourlyItems = liveForecast?.list
     ? liveForecast.list.slice(0, 8).map((item: any) => ({
-        hour: new Date(item.dt * 1000).toLocaleTimeString(lang === 'ru' ? 'ru-RU' : lang === 'kz' ? 'kk-KZ' : 'en-US', { hour: '2-digit', minute: '2-digit' }),
+        hour: new Date(item.dt * 1000).toLocaleTimeString(
+          lang === 'ru' ? 'ru-RU' : lang === 'kz' ? 'kk-KZ' : 'en-US',
+          { hour: '2-digit', minute: '2-digit' }
+        ),
         temp: Math.round(item.main.temp),
         icon: weatherIconFromCode(item.weather?.[0]?.icon || '01d'),
         humidity: item.main.humidity,
@@ -377,62 +480,110 @@ function WeatherBlock({
     : peak.hourlyForecast
 
   return (
-    <div className="clay-card p-6 h-full flex flex-col">
+    <div className="retro-card p-6 h-full flex flex-col">
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center"
-          style={{ background: 'linear-gradient(135deg, #e07030, #ff8c42)' }}
+          className="w-10 h-10 flex items-center justify-center"
+          style={{
+            background: '#c44d2c',
+            border: '2px solid #3d2b1f',
+            borderRadius: '4px',
+            boxShadow: '2px 2px 0px #3d2b1f',
+          }}
         >
-          <Cloud className="w-5 h-5 text-white" />
+          <Cloud className="w-5 h-5" style={{ color: '#fdf6e3' }} />
         </div>
         <div>
-          <h2 className="text-lg font-bold text-[#1a1a1a]">{t.weatherTitle}</h2>
-          <p className="text-xs text-[#999]">
-            {liveWeather ? (lang === 'ru' ? 'Данные OpenWeatherMap' : lang === 'kz' ? 'OpenWeatherMap деректері' : 'OpenWeatherMap data') : t.weatherSubtitle}
+          <h2
+            className="text-lg font-bold"
+            style={{ color: '#3d2b1f', fontFamily: "'Playfair Display', Georgia, serif" }}
+          >
+            {t.weatherTitle}
+          </h2>
+          <p className="text-xs" style={{ color: '#8b7355', fontFamily: "'Special Elite', serif" }}>
+            {liveWeather
+              ? lang === 'ru'
+                ? 'Данные OpenWeatherMap'
+                : lang === 'kz'
+                ? 'OpenWeatherMap деректері'
+                : 'OpenWeatherMap data'
+              : t.weatherSubtitle}
           </p>
         </div>
       </div>
 
+      {/* Best hiking day */}
+      {!loading && (
+        <div className="mb-4 p-3 flex items-center gap-3" style={{ background: '#5a6e3c', border: '2px solid #3d2b1f', borderRadius: '4px', boxShadow: '2px 2px 0px #3d2b1f' }}>
+          <Sun className="w-5 h-5 shrink-0" style={{ color: '#fdf6e3' }} />
+          <div>
+            <div className="text-xs font-bold uppercase" style={{ color: 'rgba(253,246,227,0.8)', fontFamily: "'Special Elite', serif", letterSpacing: '0.1em' }}>
+              {t.bestHikingDay}
+            </div>
+            <div className="text-sm font-bold" style={{ color: '#fdf6e3', fontFamily: "'Playfair Display', Georgia, serif" }}>
+              {getBestHikingDay().icon} {getBestHikingDay().day} — {getBestHikingDay().reason}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Loading state */}
       {loading && (
-        <div className="clay-inset p-8 flex items-center justify-center">
-          <Loader2 className="w-6 h-6 text-[#e07030] animate-spin mr-2" />
-          <span className="text-sm text-[#999]">{lang === 'ru' ? 'Загрузка...' : lang === 'kz' ? 'Жүктелуде...' : 'Loading...'}</span>
+        <div className="retro-inset p-8 flex items-center justify-center">
+          <Loader2 className="w-6 h-6 animate-spin mr-2" style={{ color: '#c44d2c' }} />
+          <span className="text-sm" style={{ color: '#8b7355', fontFamily: "'Special Elite', serif" }}>
+            {lang === 'ru' ? 'Загрузка...' : lang === 'kz' ? 'Жүктелуде...' : 'Loading...'}
+          </span>
         </div>
       )}
 
       {/* Error state */}
       {error && !loading && (
-        <div className="clay-inset p-4 flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 text-[#fb923c] shrink-0" />
-          <span className="text-xs text-[#999]">{error}</span>
+        <div className="retro-inset p-4 flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 shrink-0" style={{ color: '#d4a520' }} />
+          <span className="text-xs" style={{ color: '#8b7355' }}>{error}</span>
         </div>
       )}
 
       {/* Main temp display */}
       {!loading && (
-        <div className="clay-inset p-4 mb-4">
+        <div className="retro-inset p-4 mb-4">
           <div className="flex items-center justify-between">
             <button
-              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/50 transition-colors"
+              className="w-8 h-8 flex items-center justify-center transition-colors"
+              style={{ border: '2px solid #8b7355', borderRadius: '3px', background: 'transparent', cursor: 'pointer' }}
               onClick={() => setDateOffset((d) => d - 1)}
+              onMouseEnter={(e) => (e.currentTarget.style.background = '#eddcbc')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
             >
-              <ChevronLeft className="w-4 h-4 text-[#999]" />
+              <ChevronLeft className="w-4 h-4" style={{ color: '#8b7355' }} />
             </button>
 
             <div className="text-center">
               <div className="text-4xl mb-1">{w.icon}</div>
-              <div className="text-3xl font-bold text-[#1a1a1a]">{w.temp}°C</div>
-              <div className="text-xs text-[#999] mt-1">{w.description}</div>
-              <div className="text-xs text-[#888] mt-0.5">{getDisplayDate()}</div>
+              <div
+                className="text-3xl font-bold"
+                style={{ color: '#3d2b1f', fontFamily: "'Playfair Display', Georgia, serif" }}
+              >
+                {w.temp}°C
+              </div>
+              <div className="text-xs mt-1" style={{ color: '#8b7355', fontFamily: "'Special Elite', serif" }}>
+                {w.description}
+              </div>
+              <div className="text-xs mt-0.5" style={{ color: '#a09078', fontFamily: "'Special Elite', serif" }}>
+                {getDisplayDate()}
+              </div>
             </div>
 
             <button
-              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/50 transition-colors"
+              className="w-8 h-8 flex items-center justify-center transition-colors"
+              style={{ border: '2px solid #8b7355', borderRadius: '3px', background: 'transparent', cursor: 'pointer' }}
               onClick={() => setDateOffset((d) => d + 1)}
+              onMouseEnter={(e) => (e.currentTarget.style.background = '#eddcbc')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
             >
-              <ChevronRight className="w-4 h-4 text-[#999]" />
+              <ChevronRight className="w-4 h-4" style={{ color: '#8b7355' }} />
             </button>
           </div>
         </div>
@@ -442,22 +593,22 @@ function WeatherBlock({
       {!loading && (
         <div className="grid grid-cols-2 gap-3 mb-4">
           <WeatherMiniBlock
-            icon={<Thermometer className="w-4 h-4 text-[#e07030]" />}
+            icon={<Thermometer className="w-4 h-4" style={{ color: '#c44d2c' }} />}
             label={t.temperature}
             value={`${w.tempMax}° / ${w.tempMin}°`}
           />
           <WeatherMiniBlock
-            icon={<Droplets className="w-4 h-4 text-[#60a5fa]" />}
+            icon={<Droplets className="w-4 h-4" style={{ color: '#4a7ab5' }} />}
             label={t.humidity}
             value={`${w.humidity}%`}
           />
           <WeatherMiniBlock
-            icon={<Wind className="w-4 h-4 text-[#94a3b8]" />}
+            icon={<Wind className="w-4 h-4" style={{ color: '#8b7355' }} />}
             label={`${t.wind} ${w.windDirection}`}
             value={`${w.windSpeed} км/ч`}
           />
           <WeatherMiniBlock
-            icon={<Heart className="w-4 h-4 text-[#f87171]" />}
+            icon={<Heart className="w-4 h-4" style={{ color: '#c44d2c' }} />}
             label={t.feelsLike}
             value={`${w.feelsLike}°C`}
           />
@@ -467,8 +618,26 @@ function WeatherBlock({
       {/* Hourly forecast toggle */}
       {!loading && (
         <button
-          className="w-full py-2 text-center text-sm text-[#e07030] font-medium hover:bg-[#f0ebe5] rounded-xl transition-colors"
+          className="w-full py-2 text-center text-sm font-bold transition-colors"
+          style={{
+            color: '#c44d2c',
+            fontFamily: "'Special Elite', Georgia, serif",
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
+            border: '2px solid #c44d2c',
+            borderRadius: '4px',
+            background: 'transparent',
+            cursor: 'pointer',
+          }}
           onClick={() => setShowHourly(!showHourly)}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#c44d2c'
+            e.currentTarget.style.color = '#fdf6e3'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'transparent'
+            e.currentTarget.style.color = '#c44d2c'
+          }}
         >
           {showHourly ? t.hideDetails : t.showDetails}
         </button>
@@ -487,14 +656,25 @@ function WeatherBlock({
               {hourlyItems.map((item: any, i: number) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between py-1.5 px-3 rounded-lg text-xs"
-                  style={{ background: i % 2 === 0 ? '#f5f0eb' : 'transparent' }}
+                  className="flex items-center justify-between py-1.5 px-3 text-xs"
+                  style={{
+                    background: i % 2 === 0 ? '#eddcbc' : 'transparent',
+                    borderRadius: '2px',
+                  }}
                 >
-                  <span className="text-[#999] w-14">{item.hour}</span>
+                  <span className="w-14" style={{ color: '#8b7355', fontFamily: "'Special Elite', monospace" }}>
+                    {item.hour}
+                  </span>
                   <span className="text-base">{item.icon}</span>
-                  <span className="font-semibold text-[#1a1a1a] w-10 text-right">{item.temp}°</span>
-                  <span className="text-[#999] w-10 text-right">{item.humidity}%</span>
-                  <span className="text-[#999] w-10 text-right">{item.wind}</span>
+                  <span className="font-bold w-10 text-right" style={{ color: '#3d2b1f' }}>
+                    {item.temp}°
+                  </span>
+                  <span className="w-10 text-right" style={{ color: '#8b7355' }}>
+                    {item.humidity}%
+                  </span>
+                  <span className="w-10 text-right" style={{ color: '#8b7355' }}>
+                    {item.wind}
+                  </span>
                 </div>
               ))}
             </div>
@@ -515,12 +695,116 @@ function WeatherMiniBlock({
   value: string
 }) {
   return (
-    <div className="clay-inset p-3 rounded-xl">
+    <div className="retro-inset p-3">
       <div className="flex items-center gap-1.5 mb-1">
         {icon}
-        <span className="text-xs text-[#999]">{label}</span>
+        <span className="text-xs" style={{ color: '#8b7355', fontFamily: "'Special Elite', serif" }}>
+          {label}
+        </span>
       </div>
-      <div className="text-sm font-semibold text-[#1a1a1a]">{value}</div>
+      <div className="text-sm font-bold" style={{ color: '#3d2b1f' }}>
+        {value}
+      </div>
+    </div>
+  )
+}
+
+
+/* ─── PhotoGalleryBlock ─── */
+function PhotoGalleryBlock({ peak, t }: { peak: Peak; t: any }) {
+  const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null)
+
+  return (
+    <div className="retro-card p-6 mb-6">
+      <div className="flex items-center gap-3 mb-5">
+        <div
+          className="w-10 h-10 flex items-center justify-center"
+          style={{
+            background: '#c44d2c',
+            border: '2px solid #3d2b1f',
+            borderRadius: '4px',
+            boxShadow: '2px 2px 0px #3d2b1f',
+          }}
+        >
+          <Camera className="w-5 h-5" style={{ color: '#fdf6e3' }} />
+        </div>
+        <h2
+          className="text-lg font-bold"
+          style={{ color: '#3d2b1f', fontFamily: "'Playfair Display', Georgia, serif" }}
+        >
+          {t.photosTitle}
+        </h2>
+      </div>
+
+      <div className="retro-divider mb-5">✦</div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {peak.photos.map((photo, idx) => (
+          <button
+            key={idx}
+            onClick={() => setSelectedPhoto(selectedPhoto === idx ? null : idx)}
+            className="overflow-hidden transition-all"
+            style={{
+              border: selectedPhoto === idx ? '3px solid #c44d2c' : '3px solid #8b7355',
+              borderRadius: '4px',
+              boxShadow: selectedPhoto === idx ? '3px 3px 0px #c44d2c' : '2px 2px 0px #3d2b1f',
+              background: '#f5e6c8',
+              cursor: 'pointer',
+              padding: 0,
+            }}
+          >
+            <div
+              style={{
+                width: '100%',
+                paddingBottom: '65%',
+                backgroundImage: `url(${photo})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            />
+          </button>
+        ))}
+      </div>
+
+      {/* Lightbox overlay */}
+      {selectedPhoto !== null && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center"
+          style={{ background: 'rgba(45,27,0,0.85)' }}
+          onClick={() => setSelectedPhoto(null)}
+        >
+          <div className="relative max-w-4xl max-h-[80vh] w-full mx-4">
+            <img
+              src={peak.photos[selectedPhoto]}
+              alt={peak.name}
+              className="w-full h-full object-contain"
+              style={{ border: '4px solid #f5e6c8', borderRadius: '4px', boxShadow: '4px 4px 0px #3d2b1f' }}
+            />
+            <button
+              className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center"
+              style={{ background: '#c44d2c', border: '2px solid #3d2b1f', borderRadius: '4px', color: '#fdf6e3', cursor: 'pointer' }}
+              onClick={(e) => { e.stopPropagation(); setSelectedPhoto(null) }}
+            >
+              ✕
+            </button>
+            {/* Nav arrows */}
+            <button
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center"
+              style={{ background: '#c44d2c', border: '2px solid #3d2b1f', borderRadius: '4px', color: '#fdf6e3', cursor: 'pointer' }}
+              onClick={(e) => { e.stopPropagation(); setSelectedPhoto((selectedPhoto - 1 + peak.photos.length) % peak.photos.length) }}
+            >
+              ‹
+            </button>
+            <button
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center"
+              style={{ background: '#c44d2c', border: '2px solid #3d2b1f', borderRadius: '4px', color: '#fdf6e3', cursor: 'pointer' }}
+              onClick={(e) => { e.stopPropagation(); setSelectedPhoto((selectedPhoto + 1) % peak.photos.length) }}
+            >
+              ›
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -538,23 +822,43 @@ function EquipmentBlock({
   toggleItem: (key: string) => void
 }) {
   return (
-    <div className="clay-card p-6 mb-6">
+    <div className="retro-card p-6 mb-6">
+      {/* Decorative stripe accent */}
       <div className="flex items-center gap-3 mb-5">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center"
-          style={{ background: 'linear-gradient(135deg, #e07030, #ff8c42)' }}
+          className="w-10 h-10 flex items-center justify-center"
+          style={{
+            background: '#c44d2c',
+            border: '2px solid #3d2b1f',
+            borderRadius: '4px',
+            boxShadow: '2px 2px 0px #3d2b1f',
+          }}
         >
-          <Backpack className="w-5 h-5 text-white" />
+          <Backpack className="w-5 h-5" style={{ color: '#fdf6e3' }} />
         </div>
-        <h2 className="text-lg font-bold text-[#1a1a1a]">{t.equipmentTitle}</h2>
+        <h2
+          className="text-lg font-bold"
+          style={{ color: '#3d2b1f', fontFamily: "'Playfair Display', Georgia, serif" }}
+        >
+          {t.equipmentTitle}
+        </h2>
       </div>
+
+      <div className="retro-divider mb-5">✦</div>
 
       <div className="space-y-6">
         {peak.equipment.map((cat, catIdx) => (
           <div key={catIdx}>
             <h3
               className="text-xs font-bold uppercase tracking-wider mb-3"
-              style={{ color: '#e07030' }}
+              style={{
+                color: '#c44d2c',
+                fontFamily: "'Special Elite', Georgia, serif",
+                letterSpacing: '0.12em',
+                borderBottom: '2px solid #c44d2c',
+                paddingBottom: '4px',
+                display: 'inline-block',
+              }}
             >
               {cat.category}
             </h3>
@@ -566,31 +870,44 @@ function EquipmentBlock({
                   <button
                     key={itemIdx}
                     onClick={() => toggleItem(itemKey)}
-                    className="w-full flex items-center gap-3 p-3 clay-inset rounded-xl text-left transition-all hover:shadow-md"
+                    className="w-full flex items-center gap-3 p-3 text-left transition-all"
+                    style={{
+                      background: isChecked ? '#eddcbc' : '#f5e6c8',
+                      border: `2px solid ${isChecked ? '#8b7355' : '#c4b49a'}`,
+                      borderRadius: '4px',
+                      boxShadow: isChecked ? 'inset 1px 1px 3px rgba(61,43,31,0.15)' : '2px 2px 0px rgba(61,43,31,0.08)',
+                      cursor: 'pointer',
+                    }}
                   >
                     <div
-                      className={`clay-checkbox ${isChecked ? 'checked' : ''}`}
+                      className="retro-checkbox"
+                      style={isChecked ? { background: '#c44d2c', borderColor: '#3d2b1f' } : {}}
                     >
                       {isChecked && (
-                        <CheckCircle2 className="w-4 h-4 text-white" />
+                        <CheckCircle2 className="w-3 h-3" style={{ color: '#fdf6e3' }} />
                       )}
                     </div>
                     <div className="flex-1">
                       <span
-                        className={`text-sm font-medium ${
-                          isChecked ? 'text-[#999] line-through' : 'text-[#1a1a1a]'
-                        }`}
+                        className="text-sm font-medium"
+                        style={{
+                          color: isChecked ? '#8b7355' : '#3d2b1f',
+                          textDecoration: isChecked ? 'line-through' : 'none',
+                        }}
                       >
                         {item.name}
                       </span>
                       {item.note && (
-                        <span className="text-xs text-[#999] ml-2">
+                        <span className="text-xs ml-2" style={{ color: '#8b7355' }}>
                           ({item.note})
                         </span>
                       )}
                     </div>
                     {item.essential && (
-                      <span className="clay-badge text-xs" style={{ color: '#e07030' }}>
+                      <span
+                        className="retro-badge text-xs"
+                        style={{ color: '#c44d2c', borderColor: '#c44d2c' }}
+                      >
                         {t.essential}
                       </span>
                     )}
@@ -608,28 +925,57 @@ function EquipmentBlock({
 /* ─── SafetyBlock ─── */
 function SafetyBlock({ peak, t }: { peak: Peak; t: any }) {
   return (
-    <div className="clay-card p-6 mb-6">
+    <div className="retro-card p-6 mb-6">
       <div className="flex items-center gap-3 mb-5">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center"
-          style={{ background: 'linear-gradient(135deg, #e07030, #ff8c42)' }}
+          className="w-10 h-10 flex items-center justify-center"
+          style={{
+            background: '#c44d2c',
+            border: '2px solid #3d2b1f',
+            borderRadius: '4px',
+            boxShadow: '2px 2px 0px #3d2b1f',
+          }}
         >
-          <Shield className="w-5 h-5 text-white" />
+          <Shield className="w-5 h-5" style={{ color: '#fdf6e3' }} />
         </div>
-        <h2 className="text-lg font-bold text-[#1a1a1a]">{t.safetyTitle}</h2>
+        <h2
+          className="text-lg font-bold"
+          style={{ color: '#3d2b1f', fontFamily: "'Playfair Display', Georgia, serif" }}
+        >
+          {t.safetyTitle}
+        </h2>
       </div>
+
+      <div className="retro-divider mb-5">✦</div>
 
       <div className="grid md:grid-cols-3 gap-6">
         {/* Rules */}
         <div>
-          <h3 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: '#e07030' }}>
+          <h3
+            className="text-xs font-bold uppercase tracking-wider mb-3"
+            style={{
+              color: '#c44d2c',
+              fontFamily: "'Special Elite', Georgia, serif",
+              letterSpacing: '0.12em',
+              borderBottom: '2px solid #c44d2c',
+              paddingBottom: '4px',
+              display: 'inline-block',
+            }}
+          >
             {t.rules}
           </h3>
           <div className="space-y-2">
             {peak.safety.rules.map((rule, i) => (
-              <div key={i} className="flex items-start gap-2 text-sm text-[#1a1a1a]">
-                <AlertTriangle className="w-4 h-4 text-[#fb923c] mt-0.5 shrink-0" />
-                <span>{rule}</span>
+              <div
+                key={i}
+                className="flex items-start gap-2 text-sm p-2"
+                style={{
+                  background: i % 2 === 0 ? '#eddcbc' : 'transparent',
+                  borderRadius: '3px',
+                }}
+              >
+                <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: '#d4a520' }} />
+                <span style={{ color: '#3d2b1f' }}>{rule}</span>
               </div>
             ))}
           </div>
@@ -637,7 +983,17 @@ function SafetyBlock({ peak, t }: { peak: Peak; t: any }) {
 
         {/* Emergency contacts */}
         <div>
-          <h3 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: '#e07030' }}>
+          <h3
+            className="text-xs font-bold uppercase tracking-wider mb-3"
+            style={{
+              color: '#c44d2c',
+              fontFamily: "'Special Elite', Georgia, serif",
+              letterSpacing: '0.12em',
+              borderBottom: '2px solid #c44d2c',
+              paddingBottom: '4px',
+              display: 'inline-block',
+            }}
+          >
             {t.emergencyContacts}
           </h3>
           <div className="space-y-2">
@@ -645,12 +1001,26 @@ function SafetyBlock({ peak, t }: { peak: Peak; t: any }) {
               <a
                 key={i}
                 href={`tel:${contact.number}`}
-                className="flex items-center gap-2 text-sm text-[#1a1a1a] no-underline hover:text-[#e07030] transition-colors"
+                className="flex items-center gap-2 text-sm no-underline transition-colors p-2"
+                style={{
+                  border: '2px solid #c4b49a',
+                  borderRadius: '4px',
+                  background: '#f5e6c8',
+                  color: '#3d2b1f',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#c44d2c'
+                  e.currentTarget.style.color = '#c44d2c'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = '#c4b49a'
+                  e.currentTarget.style.color = '#3d2b1f'
+                }}
               >
-                <Phone className="w-4 h-4 text-[#e07030] shrink-0" />
+                <Phone className="w-4 h-4 shrink-0" style={{ color: '#c44d2c' }} />
                 <div>
-                  <div className="font-medium">{contact.label}</div>
-                  <div className="text-xs text-[#999]">{contact.number}</div>
+                  <div className="font-bold">{contact.label}</div>
+                  <div className="text-xs" style={{ color: '#8b7355' }}>{contact.number}</div>
                 </div>
               </a>
             ))}
@@ -659,14 +1029,31 @@ function SafetyBlock({ peak, t }: { peak: Peak; t: any }) {
 
         {/* Tips */}
         <div>
-          <h3 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: '#e07030' }}>
+          <h3
+            className="text-xs font-bold uppercase tracking-wider mb-3"
+            style={{
+              color: '#c44d2c',
+              fontFamily: "'Special Elite', Georgia, serif",
+              letterSpacing: '0.12em',
+              borderBottom: '2px solid #c44d2c',
+              paddingBottom: '4px',
+              display: 'inline-block',
+            }}
+          >
             {t.tips}
           </h3>
           <div className="space-y-2">
             {peak.safety.tips.map((tip, i) => (
-              <div key={i} className="flex items-start gap-2 text-sm text-[#1a1a1a]">
-                <CheckCircle2 className="w-4 h-4 text-[#4ade80] mt-0.5 shrink-0" />
-                <span>{tip}</span>
+              <div
+                key={i}
+                className="flex items-start gap-2 text-sm p-2"
+                style={{
+                  background: i % 2 === 0 ? '#eddcbc' : 'transparent',
+                  borderRadius: '3px',
+                }}
+              >
+                <CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0" style={{ color: '#5a6e3c' }} />
+                <span style={{ color: '#3d2b1f' }}>{tip}</span>
               </div>
             ))}
           </div>

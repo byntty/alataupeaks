@@ -50,41 +50,60 @@ export function Navbar() {
   }
 
   const difficultyColors: Record<number, string> = {
-    1: '#4ade80',
-    2: '#fb923c',
-    3: '#ef4444',
-    4: '#a855f7',
+    1: '#5a6e3c',
+    2: '#d4a520',
+    3: '#c44d2c',
+    4: '#7b2d8e',
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-3">
-      <div className="max-w-7xl mx-auto clay-card px-4 py-3 flex items-center gap-4">
+    <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-2">
+      <div
+        className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4"
+        style={{
+          background: '#f5e6c8',
+          border: '3px solid #3d2b1f',
+          borderRadius: '6px',
+          boxShadow: '4px 4px 0px #3d2b1f',
+        }}
+      >
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 shrink-0 no-underline">
+        <Link to="/" className="flex items-center gap-3 shrink-0 no-underline">
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center"
+            className="w-10 h-10 flex items-center justify-center"
             style={{
-              background: 'linear-gradient(135deg, #e07030, #ff8c42)',
-              boxShadow: '4px 4px 8px rgba(0,0,0,0.1)',
+              background: '#c44d2c',
+              border: '2px solid #3d2b1f',
+              borderRadius: '4px',
+              boxShadow: '2px 2px 0px #3d2b1f',
             }}
           >
-            <Mountain className="w-5 h-5 text-white" />
+            <Mountain className="w-5 h-5" style={{ color: '#fdf6e3' }} />
           </div>
-          <span className="text-lg font-bold text-[#1a1a1a] hidden sm:block">
-            Alatau<span className="text-[#e07030]">Peaks</span>
+          <span
+            className="text-lg font-bold hidden sm:block"
+            style={{
+              color: '#3d2b1f',
+              fontFamily: "'Playfair Display', Georgia, serif",
+            }}
+          >
+            Alatau<span style={{ color: '#c44d2c' }}>Peaks</span>
           </span>
         </Link>
 
         {/* Search */}
         <div ref={searchRef} className="flex-1 relative max-w-md">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#999]" />
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+              style={{ color: '#8b7355' }}
+            />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
               placeholder={t.searchPlaceholder}
-              className="clay-input w-full pl-10 pr-4 text-sm"
+              className="retro-input w-full pl-10 pr-4 text-sm"
             />
           </div>
 
@@ -95,25 +114,35 @@ export function Navbar() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.15 }}
-                className="absolute top-full left-0 right-0 mt-2 clay-card p-2 z-50"
+                className="absolute top-full left-0 right-0 mt-2 p-2 z-50"
+                style={{
+                  background: '#f5e6c8',
+                  border: '3px solid #3d2b1f',
+                  borderRadius: '6px',
+                  boxShadow: '4px 4px 0px #3d2b1f',
+                }}
               >
                 {searchResults.map((peak) => (
                   <button
                     key={peak.id}
                     onClick={() => handlePeakClick(peak.id)}
-                    className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-[#f0ebe5] transition-colors text-left"
+                    className="w-full flex items-center justify-between p-3 rounded text-left hover:bg-[#eddcbc] transition-colors"
+                    style={{ borderBottom: '1px dashed #8b7355' }}
                   >
                     <div>
-                      <div className="font-medium text-[#1a1a1a] text-sm">
+                      <div
+                        className="font-bold text-sm"
+                        style={{ color: '#3d2b1f' }}
+                      >
                         {displayName(peak)}
                       </div>
-                      <div className="text-xs text-[#999]">
+                      <div className="text-xs" style={{ color: '#8b7355' }}>
                         {peak.elevation} м
                       </div>
                     </div>
                     <span
-                      className="clay-badge text-xs"
-                      style={{ color: difficultyColors[peak.difficultyLevel] }}
+                      className="retro-badge text-xs"
+                      style={{ color: difficultyColors[peak.difficultyLevel], borderColor: difficultyColors[peak.difficultyLevel] }}
                     >
                       {peak.difficulty}
                     </span>
@@ -130,33 +159,35 @@ export function Navbar() {
             <button
               key={l}
               onClick={() => setLang(l)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase transition-all ${
-                lang === l
-                  ? 'text-white shadow-md'
-                  : 'text-[#999] hover:text-[#1a1a1a]'
-              }`}
-              style={
-                lang === l
-                  ? {
-                      background: 'linear-gradient(135deg, #e07030, #ff8c42)',
-                    }
-                  : {}
-              }
+              className="px-3 py-1.5 text-xs font-bold uppercase transition-all"
+              style={{
+                fontFamily: "'Special Elite', Georgia, serif",
+                letterSpacing: '0.1em',
+                border: lang === l ? '2px solid #3d2b1f' : '2px solid #8b7355',
+                borderRadius: '3px',
+                background: lang === l ? '#c44d2c' : 'transparent',
+                color: lang === l ? '#fdf6e3' : '#8b7355',
+                boxShadow: lang === l ? '2px 2px 0px #3d2b1f' : 'none',
+              }}
             >
-              {l}
+              {l.toUpperCase()}
             </button>
           ))}
         </div>
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 rounded-xl hover:bg-[#f0ebe5] transition-colors"
+          className="md:hidden p-2 rounded transition-colors"
+          style={{
+            border: '2px solid #8b7355',
+            background: 'transparent',
+          }}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           {mobileMenuOpen ? (
-            <X className="w-5 h-5 text-[#1a1a1a]" />
+            <X className="w-5 h-5" style={{ color: '#3d2b1f' }} />
           ) : (
-            <Menu className="w-5 h-5 text-[#1a1a1a]" />
+            <Menu className="w-5 h-5" style={{ color: '#3d2b1f' }} />
           )}
         </button>
       </div>
@@ -169,17 +200,26 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.2 }}
-            className="max-w-7xl mx-auto mt-2 clay-card p-4 md:hidden"
+            className="max-w-7xl mx-auto mt-2 p-4 md:hidden"
+            style={{
+              background: '#f5e6c8',
+              border: '3px solid #3d2b1f',
+              borderRadius: '6px',
+              boxShadow: '4px 4px 0px #3d2b1f',
+            }}
           >
             {/* Mobile search */}
             <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#999]" />
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                style={{ color: '#8b7355' }}
+              />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder={t.searchPlaceholder}
-                className="clay-input w-full pl-10 pr-4 text-sm"
+                className="retro-input w-full pl-10 pr-4 text-sm"
               />
             </div>
 
@@ -192,20 +232,18 @@ export function Navbar() {
                     setLang(l)
                     setMobileMenuOpen(false)
                   }}
-                  className={`flex-1 px-3 py-2 rounded-xl text-sm font-bold uppercase transition-all ${
-                    lang === l
-                      ? 'text-white'
-                      : 'text-[#999] hover:text-[#1a1a1a]'
-                  }`}
-                  style={
-                    lang === l
-                      ? {
-                          background: 'linear-gradient(135deg, #e07030, #ff8c42)',
-                        }
-                      : {}
-                  }
+                  className="flex-1 px-3 py-2 text-sm font-bold uppercase transition-all"
+                  style={{
+                    fontFamily: "'Special Elite', Georgia, serif",
+                    letterSpacing: '0.1em',
+                    border: lang === l ? '2px solid #3d2b1f' : '2px solid #8b7355',
+                    borderRadius: '3px',
+                    background: lang === l ? '#c44d2c' : 'transparent',
+                    color: lang === l ? '#fdf6e3' : '#8b7355',
+                    boxShadow: lang === l ? '2px 2px 0px #3d2b1f' : 'none',
+                  }}
                 >
-                  {l}
+                  {l.toUpperCase()}
                 </button>
               ))}
             </div>

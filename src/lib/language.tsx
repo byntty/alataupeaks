@@ -68,6 +68,17 @@ interface Translations {
   footerText: string
   madeWith: string
 
+  // Weather extras
+  bestHikingDay: string
+
+  // Photos
+  photosTitle: string
+
+  // Route selector
+  routeInfo: string
+  terrain: string
+  highlights: string
+
   // 404
   notFoundTitle: string
   notFoundBack: string
@@ -116,7 +127,7 @@ const ru: Translations = {
   tempMax: 'Макс.',
   tempMin: 'Мин.',
   hourlyForecast: 'Почасовой прогноз',
-  showDetails: 'Подробнее...',
+  showDetails: 'Подробный прогноз',
   hideDetails: 'Свернуть',
   night: 'Ночь',
   morning: 'Утро',
@@ -133,6 +144,14 @@ const ru: Translations = {
 
   footerText: 'AlatauPeaks — Путеводитель по Заилийскому Алатау',
   madeWith: 'Сделано с любовью к горам',
+
+  bestHikingDay: 'Лучший день для похода',
+
+  photosTitle: 'Фотографии с маршрута',
+
+  routeInfo: 'О маршруте',
+  terrain: 'Рельеф',
+  highlights: 'Особенности',
 
   notFoundTitle: 'Маршрут не найден',
   notFoundBack: 'На главную',
@@ -198,6 +217,14 @@ const en: Translations = {
   footerText: 'AlatauPeaks — Guide to Zailiysky Alatau',
   madeWith: 'Made with love for mountains',
 
+  bestHikingDay: 'Best Day for Hiking',
+
+  photosTitle: 'Route Photos',
+
+  routeInfo: 'Route Info',
+  terrain: 'Terrain',
+  highlights: 'Highlights',
+
   notFoundTitle: 'Route not found',
   notFoundBack: 'Home',
 }
@@ -261,6 +288,14 @@ const kz: Translations = {
 
   footerText: 'AlatauPeaks — Заилийский Алатау бойынша жетекші',
   madeWith: 'Тауларға деген махаббатпен жасалды',
+
+  bestHikingDay: 'Серуенге ең жақсы күн',
+
+  photosTitle: 'Бағыттағы фотосуреттер',
+
+  routeInfo: 'Бағыт туралы',
+  terrain: 'Жер бедері',
+  highlights: 'Ерекшеліктер',
 
   notFoundTitle: 'Бағыт табылмады',
   notFoundBack: 'Басты бет',

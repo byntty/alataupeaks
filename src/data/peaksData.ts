@@ -87,6 +87,7 @@ export interface Peak {
   routes: Route[]
   equipment: EquipmentCategory[]
   safety: Safety
+  photos: string[]
 }
 
 export function getPeakById(id: string): Peak | undefined {
@@ -254,6 +255,12 @@ export const peaksData: Peak[] = [
         'Носите свисток для экстренной сигнализации',
       ],
     },
+    photos: [
+      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=800&h=500&fit=crop',
+    ],
   },
   {
     id: 'sovietov',
@@ -378,6 +385,12 @@ export const peaksData: Peak[] = [
         'Возвращайтесь по тому же маршруту',
       ],
     },
+    photos: [
+      'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1464278533981-50106e6176b1?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=500&fit=crop',
+    ],
   },
   {
     id: 'turist',
@@ -487,6 +500,12 @@ export const peaksData: Peak[] = [
         'Вернитесь до 16:00',
       ],
     },
+    photos: [
+      'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&h=500&fit=crop',
+    ],
   },
   {
     id: 'belukha',
@@ -630,6 +649,12 @@ export const peaksData: Peak[] = [
         'Носите GPS с записанным маршрутом обратно',
       ],
     },
+    photos: [
+      'https://images.unsplash.com/photo-1491002052546-bf38f186af56?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1485470733090-0aae1788d668?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1517483000871-1dbf64a6e1c6?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=800&h=500&fit=crop',
+    ],
   },
   {
     id: 'tuyuksu',
@@ -753,6 +778,12 @@ export const peaksData: Peak[] = [
         'Избегайте ледниковых разломов — идите за проводником',
       ],
     },
+    photos: [
+      'https://images.unsplash.com/photo-1482192505345-5655af888cc4?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1446329813274-7c9036bd9a1f?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1473773508845-188df298d2d1?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&h=500&fit=crop',
+    ],
   },
   {
     id: 'manas',
@@ -916,5 +947,11 @@ export const peaksData: Peak[] = [
         'Всегда имейте план Б — худший сценарий',
       ],
     },
+    photos: [
+      'https://images.unsplash.com/photo-1529914304583-74a0f15d0e1e?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1485236715568-ddc5ee6ca227?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1513415756790-2ac1db1297d0?w=800&h=500&fit=crop',
+      'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=800&h=500&fit=crop',
+    ],
   },
 ]
